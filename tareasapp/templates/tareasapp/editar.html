@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Editar tarea</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 6px;
+            color: #34495e;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        button {
+            background: #3498db;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <h1>✏️ Editar tarea</h1>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <label for="titulo">Título:</label>
+        <br>
+
+        <input
+            type="text"
+            id="titulo"
+            name="titulo"
+            value="{{ tarea.titulo }}"
+            required
+        >
+
+        <br><br>
+
+        <label for="descripcion">Descripción:</label>
+        <br>
+
+        <textarea
+            id="descripcion"
+            name="descripcion"
+            required
+        >{{ tarea.descripcion }}</textarea>
+
+        <br><br>
+
+        <label>
+            <input
+                type="checkbox"
+                name="completada"
+                {% if tarea.completada %}checked{% endif %}
+            >
+            Tarea completada
+        </label>
+
+        <br><br>
+
+        <button type="submit">
+            Guardar cambios
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="/">
+        ← Volver al inicio
+    </a>
+
+</body>
+
+</html>
