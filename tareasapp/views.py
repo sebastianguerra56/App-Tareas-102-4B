@@ -40,5 +40,7 @@ def editar_tarea(request, tarea_id):
 
 def eliminar_tarea(request, tarea_id):
     tarea = Tarea.objects.get(id=tarea_id)
-    tarea.delete()
-    return redirect('inicio')
+    if request.method == 'POST':
+            tarea.delete()
+            return redirect('inicio')
+    return render(request, 'tareasapp/eliminar.html', {'tarea': tarea})
