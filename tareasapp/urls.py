@@ -12,4 +12,7 @@ urlpatterns = [
 
     #API login
     path('api/login/', views.LoginAPIView.as_view(), name='api_login'),
+
+    #API Listar Tareas
+    path('api/tareas/', views.TareasAPIView.as_view(), name='api_tareas'),
 ]
