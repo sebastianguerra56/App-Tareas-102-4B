@@ -15,4 +15,7 @@ urlpatterns = [
 
     #API Listar Tareas
     path('api/tareas/', views.TareasAPIView.as_view(), name='api_tareas'),
+
+    #API Ver tarea
+    path('api/tareas/<int:tarea_id>/', views.TareaDetalleAPIView.as_view(), name='api_tarea_detalle'),
 ]

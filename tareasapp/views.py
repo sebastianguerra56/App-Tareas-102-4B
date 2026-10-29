@@ -14,7 +14,6 @@ from .models import Tarea
 
 
 def inicio(request):
-
     return render(request, 'tareasapp/inicio.html') 
 
 def crear_tarea(request):
@@ -43,11 +42,7 @@ def editar_tarea(request, tarea_id):
     return render(request, 'tareasapp/editar.html', {'tarea': tarea})
 
 def eliminar_tarea(request, tarea_id):
-    tarea = Tarea.objects.get(id=tarea_id)
-    if request.method == 'POST':
-            tarea.delete()
-            return redirect('inicio')
-    return render(request, 'tareasapp/eliminar.html', {'tarea': tarea})
+    return render(request, 'tareasapp/eliminar.html')
 
 def login(request):
     return render(request, 'tareasapp/login.html')
@@ -87,3 +82,53 @@ class TareasAPIView(APIView):
                 'completada': tarea.completada
             })   
         return Response(datos, status=status.HTTP_200_OK)
+
+    #Post crear una nueva tarea
+    def post(self, request):
+
+        #Recibir datos del cliente
+        titulo = request.data.get('titulo')
+        descripcion = request.data.get('descripcion')
+        completada = request.data.get('completada')
+
+        if titulo is None or descripcion is None:
+            return Response({
+                'error': 'Debe proporcionar un título y una descripción para la tarea'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        #Creamos la tarea en la base de datos
+        tarea = Tarea.objects.create(
+            titulo=titulo,
+            descripcion=descripcion,
+            completada=completada
+        )
+        return Response({
+            'mensaje': 'Tarea creada correctamente',
+            'tarea': {
+                'id': tarea.id,
+                'titulo': tarea.titulo,
+                'descripcion': tarea.descripcion,
+                'completada': tarea.completada
+            }
+        }, status=status.HTTP_201_CREATED)
+
+class TareaDetalleAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    #Get ver una tarea por id
+    def get(self, request, tarea_id):
+        tarea = get_object_or_404(Tarea, id=tarea_id)
+        datos = {
+            'id': tarea.id,
+            'titulo': tarea.titulo,
+            'descripcion': tarea.descripcion,
+            'completada': tarea.completada
+        }
+        return Response(datos, status=status.HTTP_200_OK)
+
+    #Delete eliminar una tarea por id
+    def delete(self, request, tarea_id):
+        tarea = get_object_or_404(Tarea, id=tarea_id)
+        tarea.delete()
+        return Response({'mensaje': 'Tarea eliminada correctamente'}, status=status.HTTP_204_NO_CONTENT)
