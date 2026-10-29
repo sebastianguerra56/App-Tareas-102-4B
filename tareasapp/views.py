@@ -132,3 +132,33 @@ class TareaDetalleAPIView(APIView):
         tarea = get_object_or_404(Tarea, id=tarea_id)
         tarea.delete()
         return Response({'mensaje': 'Tarea eliminada correctamente'}, status=status.HTTP_204_NO_CONTENT)
+
+    #PUT actualizar una tarea por id
+    def put(self, request, tarea_id):
+        tarea = get_object_or_404(Tarea, id=tarea_id)
+
+        #Recibir datos 
+        titulo = request.data.get('titulo')
+        descripcion = request.data.get('descripcion')
+        completada = request.data.get('completada')
+
+        if titulo is None or descripcion is None:
+            return Response({
+                'error': 'Debe proporcionar un título y una descripción para la tarea'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        #Actualizar la tarea en la base de datos
+        tarea.titulo = titulo
+        tarea.descripcion = descripcion
+        tarea.completada = completada
+        tarea.save()
+
+        return Response({
+            'mensaje': 'Tarea actualizada correctamente',
+            'tarea': {
+                'id': tarea.id,
+                'titulo': tarea.titulo,
+                'descripcion': tarea.descripcion,
+                'completada': tarea.completada
+            }
+        }, status=status.HTTP_200_OK)
